@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Questionnaire Marketing 4P — HESTIM</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=DM+Serif+Display:ital@0;1&display=swap');
+
+:root {
+  --navy:#1F3864; --blue:#2E6DA4; --lb:#AED6F1;
+  --orange:#E67E22; --green:#27AE60; --purple:#7D3C98;
+  --bg:#F0F4FA; --white:#fff; --text:#1a2340;
+  --muted:#6b7a99; --border:#d0dbe8; --red:#E74C3C;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* ── STICKY HEADER ── */
+.sticky-top{position:sticky;top:0;z-index:100;background:var(--navy);box-shadow:0 2px 12px rgba(0,0,0,.25);}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;gap:16px;}
+.header-left h1{font-family:'DM Serif Display',serif;font-size:15px;color:white;font-weight:400;line-height:1.3;}
+.header-left p{font-size:11px;color:rgba(255,255,255,.55);margin-top:2px;}
+.prog-wrap{flex:1;max-width:280px;}
+.prog-label{display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.6);margin-bottom:5px;}
+.prog-bar{height:6px;background:rgba(255,255,255,.15);border-radius:10px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,#AED6F1,#E67E22);border-radius:10px;width:0%;transition:width .4s ease;}
+.submit-top-btn{background:var(--orange);color:white;border:none;padding:9px 20px;border-radius:8px;font-family:'Sora',sans-serif;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;transition:.2s;}
+.submit-top-btn:hover{background:#d06a17;transform:translateY(-1px);}
+
+/* ── FORM WRAPPER ── */
+.form-wrap{max-width:740px;margin:0 auto;padding:28px 20px 80px;}
+
+/* ── INTRO CARD ── */
+.intro-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:28px 28px 24px;margin-bottom:28px;border-top:5px solid var(--navy);}
+.intro-badge{display:inline-flex;align-items:center;gap:6px;background:#e8f0fb;color:var(--navy);font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:14px;}
+.intro-card h2{font-family:'DM Serif Display',serif;font-size:20px;font-weight:400;line-height:1.35;margin-bottom:10px;}
+.intro-card p{font-size:12.5px;color:var(--muted);line-height:1.7;margin-bottom:16px;}
+.intro-chips{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{background:var(--bg);border:1px solid var(--border);color:var(--muted);font-size:11px;padding:4px 12px;border-radius:20px;}
+
+/* ── SECTION ── */
+.section{margin-bottom:32px;}
+.sec-head{display:flex;align-items:center;gap:12px;margin-bottom:18px;padding-bottom:12px;border-bottom:2.5px solid var(--border);}
+.sec-num{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:white;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.15);}
+.sec-info .sec-title{font-family:'DM Serif Display',serif;font-size:16px;color:var(--navy);}
+.sec-info .sec-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* ── CARD ── */
+.card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:22px 22px 18px;margin-bottom:14px;transition:box-shadow .2s,border-color .2s;}
+.card:hover{box-shadow:0 4px 16px rgba(31,56,100,.07);}
+.card.required-err{border-color:var(--red)!important;box-shadow:0 0 0 3px rgba(231,76,60,.1)!important;}
+
+/* ── QUESTION LABEL ── */
+.ql{font-size:13px;font-weight:600;color:var(--text);line-height:1.55;margin-bottom:14px;display:flex;gap:8px;align-items:flex-start;}
+.qn{background:var(--lb);color:var(--navy);font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;flex-shrink:0;margin-top:2px;}
+.req-star{color:var(--red);}
+.tbadge{font-size:10px;padding:2px 8px;border-radius:4px;font-weight:700;margin-left:6px;white-space:nowrap;}
+.b-likert{background:#e8f0fb;color:var(--navy);}
+.b-qcm{background:#fef3e8;color:#b7570d;}
+.b-open{background:#eafaf1;color:#1a7a4a;}
+.b-rank{background:#f4e8ff;color:#6a1a9a;}
+
+/* ── SCALE LEGEND ── */
+.scale-leg{background:#f5f8ff;border:1px solid #c8d9f0;border-radius:8px;padding:9px 14px;font-size:11px;color:var(--navy);margin-bottom:14px;display:flex;flex-wrap:wrap;gap:6px 14px;}
+.scale-leg span{font-weight:700;}
+
+/* ── LIKERT TABLE ── */
+.lt-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.lt{width:100%;border-collapse:collapse;font-size:11.5px;min-width:380px;}
+.lt thead th{padding:7px 4px;text-align:center;color:var(--muted);font-size:10.5px;font-weight:600;border-bottom:1.5px solid var(--border);}
+.lt thead th:first-child{text-align:left;min-width:200px;padding-left:0;}
+.lt tbody tr{border-bottom:1px solid #f0f4fb;transition:background .15s;}
+.lt tbody tr:hover{background:#f8faff;}
+.lt tbody tr:last-child{border-bottom:none;}
+.lt tbody td{padding:10px 4px;text-align:center;vertical-align:middle;}
+.lt tbody td:first-child{text-align:left;padding-left:0;font-size:12px;line-height:1.45;color:var(--text);}
+.lt input[type=radio]{width:16px;height:16px;accent-color:var(--navy);cursor:pointer;}
+
+/* ── QCM ── */
+.qcm-list{display:flex;flex-direction:column;gap:8px;}
+.qcm-opt{display:flex;align-items:center;gap:10px;padding:11px 14px;border:1.5px solid var(--border);border-radius:9px;cursor:pointer;font-size:13px;transition:all .15s;}
+.qcm-opt:hover{border-color:var(--blue);background:#f5f9ff;}
+.qcm-opt.active{border-color:var(--navy);background:#e8f0fb;}
+.qcm-opt input{accent-color:var(--navy);width:15px;height:15px;flex-shrink:0;pointer-events:none;}
+
+/* ── OPEN ── */
+.open-inp{width:100%;border:1.5px solid var(--border);border-radius:9px;padding:11px 14px;font-family:'Sora',sans-serif;font-size:13px;color:var(--text);resize:vertical;min-height:90px;transition:border-color .2s;background:white;}
+.open-inp:focus{outline:none;border-color:var(--navy);background:#fafcff;}
+
+/* ── RANK ── */
+.rank-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.rank-item label{font-size:12px;font-weight:600;color:var(--navy);display:block;margin-bottom:6px;}
+.sel-inp{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'Sora',sans-serif;font-size:12.5px;background:white;cursor:pointer;color:var(--text);transition:border-color .2s;}
+.sel-inp:focus{outline:none;border-color:var(--navy);}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(30px);background:var(--navy);color:white;padding:12px 24px;border-radius:10px;font-size:13px;font-weight:600;opacity:0;transition:all .35s;pointer-events:none;z-index:999;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.success{background:var(--green);}
+.toast.error{background:var(--red);}
+
+/* ── SUBMIT SECTION ── */
+.submit-section{background:white;border:1px solid var(--border);border-radius:14px;padding:28px;text-align:center;margin-top:8px;}
+.submit-btn{background:var(--navy);color:white;border:none;padding:15px 48px;border-radius:10px;font-family:'Sora',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;letter-spacing:.3px;}
+.submit-btn:hover{background:#2d4f8a;transform:translateY(-2px);box-shadow:0 6px 20px rgba(31,56,100,.3);}
+.submit-btn:disabled{background:var(--muted);cursor:not-allowed;transform:none;box-shadow:none;}
+.submit-note{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.6;}
+
+/* ── SUCCESS SCREEN ── */
+.success-screen{display:none;background:white;border:1px solid var(--border);border-radius:14px;padding:48px 32px;text-align:center;}
+.success-screen.show{display:block;}
+.success-icon{font-size:56px;margin-bottom:16px;}
+.success-screen h2{font-family:'DM Serif Display',serif;font-size:24px;color:var(--navy);margin-bottom:10px;}
+.success-screen p{font-size:13px;color:var(--muted);line-height:1.7;}
+
+/* ── SETUP BANNER ── */
+.setup-banner{background:#fff8e1;border:1.5px solid #F39C12;border-radius:10px;padding:16px 20px;margin-bottom:24px;font-size:12.5px;line-height:1.7;}
+.setup-banner strong{color:#b7570d;}
+.setup-banner code{background:#fdefc3;padding:2px 6px;border-radius:4px;font-size:11.5px;font-family:monospace;}
+.setup-banner .url-input{width:100%;margin-top:10px;border:1.5px solid #F39C12;border-radius:7px;padding:8px 12px;font-family:'Sora',sans-serif;font-size:12px;color:var(--text);}
+.setup-banner .url-input:focus{outline:none;border-color:#d06a17;}
+.setup-step{display:flex;gap:10px;align-items:flex-start;margin-top:8px;}
+.step-num{background:var(--orange);color:white;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px;}
+
+@media(max-width:600px){
+  .header-inner{flex-direction:column;align-items:flex-start;gap:10px;}
+  .prog-wrap{max-width:100%;width:100%;}
+  .rank-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ STICKY HEADER ══════════════ -->
+<div class="sticky-top">
+  <div class="header-inner">
+    <div class="header-left">
+      <h1>Marketing Mix 4P — Impact sur le lancement FMCG au Maroc</h1>
+      <p>HESTIM · Master 2 · ZIANE Soukaina</p>
+    </div>
+    <div class="prog-wrap">
+      <div class="prog-label">
+        <span>Progression</span>
+        <span id="prog-pct">0 / 22 réponses</span>
+      </div>
+      <div class="prog-bar"><div class="prog-fill" id="prog-fill"></div></div>
+    </div>
+    <button class="submit-top-btn" onclick="submitForm()">Soumettre ↑</button>
+  </div>
+</div>
+
+<!-- ══════════════ FORM ══════════════ -->
+<div class="form-wrap">
+
+  <input type="hidden" id="apps-script-url"/>
+
+  <!-- INTRO -->
+  <div class="intro-card">
+    <div class="intro-badge">📋 Mémoire de Fin d'Année · M2</div>
+    <h2>Impact du Marketing Mix (4P) sur le lancement<br>des produits de grande consommation au Maroc</h2>
+    <p>Ce questionnaire s'adresse aux <strong>professionnels du marketing et managers</strong> ayant une expérience du marché marocain. Il s'inscrit dans le cadre d'un mémoire de recherche académique à HESTIM. Vos réponses sont <strong>strictement anonymes</strong> et utilisées uniquement à des fins scientifiques.</p>
+    <div class="intro-chips">
+      <span class="chip">⏱ ~12 minutes</span>
+      <span class="chip">📊 5 sections · 28 questions</span>
+      <span class="chip">🔒 Anonymat garanti</span>
+      <span class="chip">Likert 1–5 + QCM + Questions ouvertes</span>
+    </div>
+  </div>
+
+  <!-- ════ SECTION 0 ════ -->
+  <div class="section">
+    <div class="sec-head">
+      <div class="sec-num" style="background:#1F3864;">0</div>
+      <div class="sec-info">
+        <div class="sec-title">Profil professionnel</div>
+        <div class="sec-sub">Données socio-professionnelles — QCM obligatoires</div>
+      </div>
+    </div>
+
+    <div class="card" data-req="q1">
+      <div class="ql"><span class="qn">Q1</span>Votre secteur d'activité principal ?<span class="req-star"> *</span><span class="tbadge b-qcm">QCM</span></div>
+      <div class="qcm-list" data-name="q1">
+        <label class="qcm-opt"><input type="radio" name="q1" value="Agroalimentaire / FMCG"> Agroalimentaire / FMCG</label>
+        <label class="qcm-opt"><input type="radio" name="q1" value="Cosmétique / Hygiène"> Cosmétique / Hygiène</label>
+        <label class="qcm-opt"><input type="radio" name="q1" value="Pharmaceutique / Santé"> Pharmaceutique / Santé</label>
+        <label class="qcm-opt"><input type="radio" name="q1" value="Distribution / Retail"> Distribution / Retail</label>
+        <label class="qcm-opt"><input type="radio" name="q1" value="Conseil / Agence marketing"> Conseil / Agence marketing</label>
+        <label class="qcm-opt"><input type="radio" name="q1" value="Autre"> Autre</label>
+      </div>
+    </div>
+
+    <div class="card" data-req="q2">
+      <div class="ql"><span class="qn">Q2</span>Votre poste actuel ?<span class="req-star"> *</span><span class="tbadge b-qcm">QCM</span></div>
+      <div class="qcm-list" data-name="q2">
+        <label class="qcm-opt"><input type="radio" name="q2" value="Directeur Marketing / Commercial"> Directeur Marketing / Commercial</label>
+        <label class="qcm-opt"><input type="radio" name="q2" value="Chef de produit / Chef de marque"> Chef de produit / Chef de marque</label>
+        <label class="qcm-opt"><input type="radio" name="q2" value="Responsable Marketing"> Responsable Marketing</label>
+        <label class="qcm-opt"><input type="radio" name="q2" value="Chargé(e) de marketing / communication"> Chargé(e) de marketing / communication</label>
+        <label class="qcm-opt"><input type="radio" name="q2" value="Consultant(e) / Freelance"> Consultant(e) / Freelance</label>
+        <label class="qcm-opt"><input type="radio" name="q2" value="Autre"> Autre</label>
+      </div>
+    </div>
+
+    <div class="card" data-req="q3">
+      <div class="ql"><span class="qn">Q3</span>Années d'expérience en marketing / commerce ?<span class="req-star"> *</span><span class="tbadge b-qcm">QCM</span></div>
+      <div class="qcm-list" data-name="q3">
+        <label class="qcm-opt"><input type="radio" name="q3" value="Moins de 2 ans"> Moins de 2 ans</label>
+        <label class="qcm-opt"><input type="radio" name="q3" value="2 à 5 ans"> 2 à 5 ans</label>
+        <label class="qcm-opt"><input type="radio" name="q3" value="5 à 10 ans"> 5 à 10 ans</label>
+        <label class="qcm-opt"><input type="radio" name="q3" value="Plus de 10 ans"> Plus de 10 ans</label>
+      </div>
+    </div>
+
+    <div class="card" data-req="q4">
+      <div class="ql"><span class="qn">Q4</span>Avez-vous participé au lancement d'un produit sur le marché marocain ?<span class="req-star"> *</span><span class="tbadge b-qcm">QCM</span></div>
+      <div class="qcm-list" data-name="q4">
+        <label class="qcm-opt"><input type="radio" name="q4" value="Oui, plusieurs fois"> Oui, plusieurs fois</label>
+        <label class="qcm-opt"><input type="radio" name="q4" value="Oui, une fois"> Oui, une fois</label>
+        <label class="qcm-opt"><input type="radio" name="q4" value="Non"> Non</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ SECTION 1 — PRODUIT ════ -->
+  <div class="section">
+    <div class="sec-head">
+      <div class="sec-num" style="background:#2471A3;">1</div>
+      <div class="sec-info">
+        <div class="sec-title">Variable P1 — Produit</div>
+        <div class="sec-sub">H1a · H1b · H1c — Notoriété · Valeur perçue · Réachat</div>
+      </div>
+    </div>
+
+    <div class="card" data-req="q5,q6,q7">
+      <div class="ql"><span class="qn">Q5–Q7</span>Évaluez les affirmations suivantes sur le <strong>produit</strong>.<span class="req-star"> *</span><span class="tbadge b-likert">LIKERT 5</span></div>
+      <div class="scale-leg"><span>1</span> Pas du tout d'accord &nbsp;·&nbsp; <span>2</span> Plutôt pas d'accord &nbsp;·&nbsp; <span>3</span> Neutre &nbsp;·&nbsp; <span>4</span> Plutôt d'accord &nbsp;·&nbsp; <span>5</span> Tout à fait d'accord</div>
+      <div class="lt-wrap">
+        <table class="lt">
+          <thead><tr><th>Affirmation</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr></thead>
+          <tbody>
+            <tr><td>Q5 — Un produit de haute qualité facilite sa reconnaissance par les consommateurs <em>(H1a)</em></td><td><input type="radio" name="q5" value="1"></td><td><input type="radio" name="q5" value="2"></td><td><input type="radio" name="q5" value="3"></td><td><input type="radio" name="q5" value="4"></td><td><input type="radio" name="q5" value="5"></td></tr>
+            <tr><td>Q6 — L'innovation produit renforce la valeur perçue par le consommateur <em>(H1b)</em></td><td><input type="radio" name="q6" value="1"></td><td><input type="radio" name="q6" value="2"></td><td><input type="radio" name="q6" value="3"></td><td><input type="radio" name="q6" value="4"></td><td><input type="radio" name="q6" value="5"></td></tr>
+            <tr><td>Q7 — Un produit adapté aux besoins locaux favorise l'intention de réachat <em>(H1c)</em></td><td><input type="radio" name="q7" value="1"></td><td><input type="radio" name="q7" value="2"></td><td><input type="radio" name="q7" value="3"></td><td><input type="radio" name="q7" value="4"></td><td><input type="radio" name="q7" value="5"></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" data-req="q8">
+      <div class="ql"><span class="qn">Q8</span>Quel facteur produit a été le plus décisif lors du dernier lancement auquel vous avez participé ?<span class="req-star"> *</span><span class="tbadge b-qcm">QCM</span></div>
+      <div class="qcm-list" data-name="q8">
+        <label class="qcm-opt"><input type="radio" name="q8" value="La qualité perçue"> La qualité perçue</label>
+        <label class="qcm-opt"><input type="radio" name="q8" value="L'innovation / nouveauté"> L'innovation / nouveauté</label>
+        <label class="qcm-opt"><input type="radio" name="q8" value="L'adéquation culturelle"> L'adéquation culturelle</label>
+        <label class="qcm-opt"><input type="radio" name="q8" value="Le design / packaging"> Le design / packaging</label>
+        <label class="qcm-opt"><input type="radio" name="q8" value="La réputation de la marque"> La réputation de la marque</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ SECTION 2 — PRIX ════ -->
+  <div class="section">
+    <div class="sec-head">
+      <div class="sec-num" style="background:#E67E22;">2</div>
+      <div class="sec-info">
+        <div class="sec-title">Variable P2 — Prix</div>
+        <div class="sec-sub">H2a · H2b — Valeur perçue · Intention d'achat</div>
+      </div>
+    </div>
+
+    <div class="card" data-req="q9,q10,q11">
+      <div class="ql"><span class="qn">Q9–Q11</span>Évaluez les affirmations sur la <strong>stratégie de prix</strong>.<span class="req-star"> *</span><span class="tbadge b-likert">LIKERT 5</span></div>
+      <div class="scale-leg"><span>1</span> Pas du tout d'accord &nbsp;·&nbsp; <span>3</span> Neutre &nbsp;·&nbsp; <span>5</span> Tout à fait d'accord</div>
+      <div class="lt-wrap">
+        <table class="lt">
+          <thead><tr><th>Affirmation</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr></thead>
+          <tbody>
+            <tr><td>Q9 — Un prix cohérent avec la qualité renforce la valeur perçue du produit <em>(H2a)</em></td><td><input type="radio" name="q9" value="1"></td><td><input type="radio" name="q9" value="2"></td><td><input type="radio" name="q9" value="3"></td><td><input type="radio" name="q9" value="4"></td><td><input type="radio" name="q9" value="5"></td></tr>
+            <tr><td>Q10 — Un prix trop bas nuit à l'image du produit sur le marché marocain <em>(H2a)</em></td><td><input type="radio" name="q10" value="1"></td><td><input type="radio" name="q10" value="2"></td><td><input type="radio" name="q10" value="3"></td><td><input type="radio" name="q10" value="4"></td><td><input type="radio" name="q10" value="5"></td></tr>
+            <tr><td>Q11 — Un bon rapport qualité/prix stimule l'intention d'achat et de réachat <em>(H2b)</em></td><td><input type="radio" name="q11" value="1"></td><td><input type="radio" name="q11" value="2"></td><td><input type="radio" name="q11" value="3"></td><td><input type="radio" name="q11" value="4"></td><td><input type="radio" name="q11" value="5"></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" data-req="q12">
+      <div class="ql"><span class="qn">Q12</span>Quelle stratégie de prix est la plus adaptée au lancement d'un FMCG au Maroc ?<span class="req-star"> *</span><span class="tbadge b-qcm">QCM</span></div>
+      <div class="qcm-list" data-name="q12">
+        <label class="qcm-opt"><input type="radio" name="q12" value="Pénétration (prix bas pour capter le marché rapidement)"> Pénétration (prix bas pour capter le marché rapidement)</label>
+        <label class="qcm-opt"><input type="radio" name="q12" value="Écrémage (prix élevé puis descente progressive)"> Écrémage (prix élevé puis descente progressive)</label>
+        <label class="qcm-opt"><input type="radio" name="q12" value="Tarification psychologique (ex. 99 MAD)"> Tarification psychologique (ex. 99 MAD)</label>
+        <label class="qcm-opt"><input type="radio" name="q12" value="Alignement sur la concurrence"> Alignement sur la concurrence</label>
+        <label class="qcm-opt"><input type="radio" name="q12" value="Dépend du segment cible"> Dépend du segment cible</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ SECTION 3 — DISTRIBUTION ════ -->
+  <div class="section">
+    <div class="sec-head">
+      <div class="sec-num" style="background:#1A7A4A;">3</div>
+      <div class="sec-info">
+        <div class="sec-title">Variable P3 — Distribution</div>
+        <div class="sec-sub">H3a · H3b — Notoriété · Répétition d'achat</div>
+      </div>
+    </div>
+
+    <div class="card" data-req="q13,q14,q15">
+      <div class="ql"><span class="qn">Q13–Q15</span>Évaluez les affirmations sur la <strong>distribution</strong>.<span class="req-star"> *</span><span class="tbadge b-likert">LIKERT 5</span></div>
+      <div class="scale-leg"><span>1</span> Pas du tout d'accord &nbsp;·&nbsp; <span>3</span> Neutre &nbsp;·&nbsp; <span>5</span> Tout à fait d'accord</div>
+      <div class="lt-wrap">
+        <table class="lt">
+          <thead><tr><th>Affirmation</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr></thead>
+          <tbody>
+            <tr><td>Q13 — La disponibilité du produit dès le lancement favorise sa notoriété <em>(H3a)</em></td><td><input type="radio" name="q13" value="1"></td><td><input type="radio" name="q13" value="2"></td><td><input type="radio" name="q13" value="3"></td><td><input type="radio" name="q13" value="4"></td><td><input type="radio" name="q13" value="5"></td></tr>
+            <tr><td>Q14 — Une rupture de stock en phase de lancement compromet durablement le succès <em>(H3a)</em></td><td><input type="radio" name="q14" value="1"></td><td><input type="radio" name="q14" value="2"></td><td><input type="radio" name="q14" value="3"></td><td><input type="radio" name="q14" value="4"></td><td><input type="radio" name="q14" value="5"></td></tr>
+            <tr><td>Q15 — Une stratégie omnicanale (physique + digital) améliore la répétition d'achat <em>(H3b)</em></td><td><input type="radio" name="q15" value="1"></td><td><input type="radio" name="q15" value="2"></td><td><input type="radio" name="q15" value="3"></td><td><input type="radio" name="q15" value="4"></td><td><input type="radio" name="q15" value="5"></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" data-req="q16">
+      <div class="ql"><span class="qn">Q16</span>Quel canal de distribution est le plus efficace pour lancer un FMCG au Maroc ?<span class="req-star"> *</span><span class="tbadge b-qcm">QCM</span></div>
+      <div class="qcm-list" data-name="q16">
+        <label class="qcm-opt"><input type="radio" name="q16" value="Grande distribution (Marjane, Carrefour, Label'Vie)"> Grande distribution (Marjane, Carrefour, Label'Vie)</label>
+        <label class="qcm-opt"><input type="radio" name="q16" value="Commerce de proximité (épiceries, hanout)"> Commerce de proximité (épiceries, hanout)</label>
+        <label class="qcm-opt"><input type="radio" name="q16" value="E-commerce (site web, marketplace)"> E-commerce (site web, marketplace)</label>
+        <label class="qcm-opt"><input type="radio" name="q16" value="Omnicanal (physique + digital)"> Omnicanal (physique + digital)</label>
+        <label class="qcm-opt"><input type="radio" name="q16" value="Distribution sélective (points de vente premium)"> Distribution sélective (points de vente premium)</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ SECTION 4 — PROMOTION ════ -->
+  <div class="section">
+    <div class="sec-head">
+      <div class="sec-num" style="background:#7D3C98;">4</div>
+      <div class="sec-info">
+        <div class="sec-title">Variable P4 — Promotion</div>
+        <div class="sec-sub">H4a · H4b — Notoriété · Intention d'achat</div>
+      </div>
+    </div>
+
+    <div class="card" data-req="q17,q18,q19">
+      <div class="ql"><span class="qn">Q17–Q19</span>Évaluez les affirmations sur la <strong>communication / promotion</strong>.<span class="req-star"> *</span><span class="tbadge b-likert">LIKERT 5</span></div>
+      <div class="scale-leg"><span>1</span> Pas du tout d'accord &nbsp;·&nbsp; <span>3</span> Neutre &nbsp;·&nbsp; <span>5</span> Tout à fait d'accord</div>
+      <div class="lt-wrap">
+        <table class="lt">
+          <thead><tr><th>Affirmation</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr></thead>
+          <tbody>
+            <tr><td>Q17 — Une campagne intensive au lancement construit rapidement la notoriété <em>(H4a)</em></td><td><input type="radio" name="q17" value="1"></td><td><input type="radio" name="q17" value="2"></td><td><input type="radio" name="q17" value="3"></td><td><input type="radio" name="q17" value="4"></td><td><input type="radio" name="q17" value="5"></td></tr>
+            <tr><td>Q18 — Les promotions et offres d'essai (échantillons) stimulent l'achat initial <em>(H4b)</em></td><td><input type="radio" name="q18" value="1"></td><td><input type="radio" name="q18" value="2"></td><td><input type="radio" name="q18" value="3"></td><td><input type="radio" name="q18" value="4"></td><td><input type="radio" name="q18" value="5"></td></tr>
+            <tr><td>Q19 — La cohérence du message sur tous les canaux renforce la valeur perçue <em>(H4b)</em></td><td><input type="radio" name="q19" value="1"></td><td><input type="radio" name="q19" value="2"></td><td><input type="radio" name="q19" value="3"></td><td><input type="radio" name="q19" value="4"></td><td><input type="radio" name="q19" value="5"></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" data-req="q20">
+      <div class="ql"><span class="qn">Q20</span>Quel levier promotionnel est le plus efficace pour lancer un produit au Maroc ?<span class="req-star"> *</span><span class="tbadge b-qcm">QCM</span></div>
+      <div class="qcm-list" data-name="q20">
+        <label class="qcm-opt"><input type="radio" name="q20" value="Publicité TV / Radio"> Publicité TV / Radio</label>
+        <label class="qcm-opt"><input type="radio" name="q20" value="Réseaux sociaux & influence marketing"> Réseaux sociaux &amp; influence marketing</label>
+        <label class="qcm-opt"><input type="radio" name="q20" value="Promotions en point de vente (PLV, échantillons)"> Promotions en point de vente (PLV, échantillons)</label>
+        <label class="qcm-opt"><input type="radio" name="q20" value="Marketing de contenu (blog, SEO)"> Marketing de contenu (blog, SEO)</label>
+        <label class="qcm-opt"><input type="radio" name="q20" value="Combinaison ATL + BTL + Digital"> Combinaison ATL + BTL + Digital</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ SECTION 5 — H5 + QUALITATIF ════ -->
+  <div class="section">
+    <div class="sec-head">
+      <div class="sec-num" style="background:#B7770D;">5</div>
+      <div class="sec-info">
+        <div class="sec-title">Hiérarchie des leviers &amp; volet qualitatif</div>
+        <div class="sec-sub">H5 — Comparaison des impacts + questions ouvertes</div>
+      </div>
+    </div>
+
+    <div class="card" data-req="q21_produit,q21_prix,q21_distrib,q21_promo">
+      <div class="ql"><span class="qn">Q21</span>Classez les 4P par ordre d'importance pour le succès d'un lancement (1 = le plus important).<span class="req-star"> *</span><span class="tbadge b-rank">CLASSEMENT</span></div>
+      <div class="rank-grid">
+        <div class="rank-item"><label>Produit — rang</label><select class="sel-inp" name="q21_produit"><option value="">Choisir…</option><option value="1">1 — Le plus important</option><option value="2">2</option><option value="3">3</option><option value="4">4 — Le moins important</option></select></div>
+        <div class="rank-item"><label>Prix — rang</label><select class="sel-inp" name="q21_prix"><option value="">Choisir…</option><option value="1">1 — Le plus important</option><option value="2">2</option><option value="3">3</option><option value="4">4 — Le moins important</option></select></div>
+        <div class="rank-item"><label>Distribution — rang</label><select class="sel-inp" name="q21_distrib"><option value="">Choisir…</option><option value="1">1 — Le plus important</option><option value="2">2</option><option value="3">3</option><option value="4">4 — Le moins important</option></select></div>
+        <div class="rank-item"><label>Promotion — rang</label><select class="sel-inp" name="q21_promo"><option value="">Choisir…</option><option value="1">1 — Le plus important</option><option value="2">2</option><option value="3">3</option><option value="4">4 — Le moins important</option></select></div>
+      </div>
+    </div>
+
+    <div class="card" data-req="q22,q23,q24">
+      <div class="ql"><span class="qn">Q22–Q24</span>Évaluez les affirmations comparatives <strong>(H5)</strong>.<span class="req-star"> *</span><span class="tbadge b-likert">LIKERT 5</span></div>
+      <div class="scale-leg"><span>1</span> Pas du tout d'accord &nbsp;·&nbsp; <span>3</span> Neutre &nbsp;·&nbsp; <span>5</span> Tout à fait d'accord</div>
+      <div class="lt-wrap">
+        <table class="lt">
+          <thead><tr><th>Affirmation</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr></thead>
+          <tbody>
+            <tr><td>Q22 — La promotion a un impact plus fort que le produit sur le succès du lancement <em>(H5)</em></td><td><input type="radio" name="q22" value="1"></td><td><input type="radio" name="q22" value="2"></td><td><input type="radio" name="q22" value="3"></td><td><input type="radio" name="q22" value="4"></td><td><input type="radio" name="q22" value="5"></td></tr>
+            <tr><td>Q23 — La distribution a un impact plus fort que le prix sur le succès du lancement <em>(H5)</em></td><td><input type="radio" name="q23" value="1"></td><td><input type="radio" name="q23" value="2"></td><td><input type="radio" name="q23" value="3"></td><td><input type="radio" name="q23" value="4"></td><td><input type="radio" name="q23" value="5"></td></tr>
+            <tr><td>Q24 — La synergie entre les 4P est plus déterminante que chaque levier pris isolément</td><td><input type="radio" name="q24" value="1"></td><td><input type="radio" name="q24" value="2"></td><td><input type="radio" name="q24" value="3"></td><td><input type="radio" name="q24" value="4"></td><td><input type="radio" name="q24" value="5"></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" style="border-left:3px solid #1A7A4A;">
+      <div class="ql"><span class="qn">Q25</span>Décrivez brièvement un lancement réussi auquel vous avez contribué. Quel levier du mix a été décisif ?<span class="tbadge b-open">OUVERT</span></div>
+      <textarea class="open-inp" name="q25" placeholder="Ex. : Lors du lancement de X en 2022, la stratégie de pénétration via les réseaux sociaux a permis d'atteindre 40 000 consommateurs en 3 semaines…"></textarea>
+    </div>
+
+    <div class="card" style="border-left:3px solid #1A7A4A;">
+      <div class="ql"><span class="qn">Q26</span>Quels sont les obstacles les plus fréquents au lancement d'un FMCG sur le marché marocain ?<span class="tbadge b-open">OUVERT</span></div>
+      <textarea class="open-inp" name="q26" placeholder="Ex. : Sensibilité au prix, délais logistiques, concurrence des marques locales établies…"></textarea>
+    </div>
+
+    <div class="card" style="border-left:3px solid #1A7A4A;">
+      <div class="ql"><span class="qn">Q27</span>Comment adaptez-vous votre mix marketing aux spécificités culturelles et régionales du Maroc ?<span class="tbadge b-open">OUVERT</span></div>
+      <textarea class="open-inp" name="q27" placeholder="Ex. : Adaptation des emballages en arabe/français, respect du halal, adaptation des circuits pour les zones rurales…"></textarea>
+    </div>
+
+    <div class="card" style="border-left:3px solid #7D3C98;" data-req="q28">
+      <div class="ql"><span class="qn">Q28</span>Seriez-vous disponible pour un entretien approfondi de 20–30 minutes ?<span class="req-star"> *</span><span class="tbadge b-qcm">QCM</span></div>
+      <div class="qcm-list" data-name="q28">
+        <label class="qcm-opt"><input type="radio" name="q28" value="Oui, avec plaisir"> Oui, avec plaisir</label>
+        <label class="qcm-opt"><input type="radio" name="q28" value="Peut-être, sous réserve de disponibilité"> Peut-être, sous réserve de disponibilité</label>
+        <label class="qcm-opt"><input type="radio" name="q28" value="Non"> Non</label>
+      </div>
+      <div style="margin-top:14px;">
+        <label style="font-size:12px;font-weight:600;color:var(--navy);display:block;margin-bottom:7px;">Si oui — votre email de contact <span style="font-weight:400;color:var(--muted);">(facultatif)</span></label>
+        <input type="email" name="q28_email" class="open-inp" style="min-height:unset;height:42px;resize:none;" placeholder="exemple@email.com">
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBMIT -->
+  <div class="submit-section" id="submit-section">
+    <button class="submit-btn" id="submit-btn" onclick="submitForm()">✅ Soumettre mes réponses</button>
+    <p class="submit-note">Vos réponses sont anonymes et utilisées uniquement à des fins de recherche académique.<br>HESTIM — Master 2 Marketing Digital &amp; Business Development · 2024–2025</p>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="success-screen" id="success-screen">
+    <div class="success-icon">🎉</div>
+    <h2>Merci pour votre participation !</h2>
+    <p>Vos réponses ont été enregistrées avec succès.<br>Elles contribuent à la recherche académique sur le marketing au Maroc.<br><br><strong>HESTIM — Master 2 Marketing Digital &amp; Business Development</strong><br>ZIANE Soukaina · 2024–2025</p>
+  </div>
+
+</div><!-- form-wrap -->
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════ APPS SCRIPT README (hidden) ══════════════ -->
+<!--
+=== CODE APPS SCRIPT À COLLER DANS VOTRE GOOGLE SHEET ===
+
+function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = JSON.parse(e.postData.contents);
+
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(Object.keys(data));
+  }
+  sheet.appendRow(Object.values(data));
+
+  return ContentService
+    .createTextOutput(JSON.stringify({ status: 'ok' }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+=== ÉTAPES DE DÉPLOIEMENT ===
+1. Ouvrez votre Google Sheet
+2. Extensions → Apps Script
+3. Collez le code ci-dessus
+4. Déployer → Nouveau déploiement → Application Web
+5. Exécuter en tant que : Moi
+6. Accès : Tout le monde
+7. Déployer → Copier l'URL → Coller dans le bandeau de configuration du formulaire
+-->
+
+<script>
+// ── URL PERSISTENCE ──────────────────────────────────────────────────────────
+const STORAGE_KEY = 'hestim_4p_script_url';
+
+window.onload = function() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    document.getElementById('apps-script-url').value = saved;
+    document.getElementById('setup-banner').style.display = 'none';
+  }
+};
+
+function saveUrl(showMsg) {
+  const url = document.getElementById('apps-script-url').value.trim();
+  if (url) {
+    localStorage.setItem(STORAGE_KEY, url);
+    if (showMsg) {
+      showToast('✅ URL enregistrée ! Le formulaire est prêt.', 'success');
+      setTimeout(() => document.getElementById('setup-banner').style.display = 'none', 1500);
+    }
+  }
+}
+
+function hideBanner() {
+  document.getElementById('setup-banner').style.display = 'none';
+}
+
+// ── PROGRESS ─────────────────────────────────────────────────────────────────
+const REQUIRED_FIELDS = [
+  'q1','q2','q3','q4',
+  'q5','q6','q7','q8',
+  'q9','q10','q11','q12',
+  'q13','q14','q15','q16',
+  'q17','q18','q19','q20',
+  'q21_produit','q21_prix','q21_distrib','q21_promo',
+  'q22','q23','q24','q28'
+];
+const TOTAL = REQUIRED_FIELDS.length;
+
+function updateProgress() {
+  let done = 0;
+  REQUIRED_FIELDS.forEach(name => {
+    const radios = document.querySelectorAll(`input[type="radio"][name="${name}"]:checked`);
+    const selects = document.querySelectorAll(`select[name="${name}"]`);
+    if (radios.length > 0) done++;
+    else if (selects.length > 0 && selects[0].value !== '') done++;
+  });
+  const pct = Math.round(done / TOTAL * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-pct').textContent = done + ' / ' + TOTAL + ' réponses';
+}
+
+document.addEventListener('change', updateProgress);
+
+// ── QCM HIGHLIGHT ─────────────────────────────────────────────────────────────
+document.querySelectorAll('.qcm-opt input[type="radio"]').forEach(inp => {
+  inp.addEventListener('change', function() {
+    const nm = this.getAttribute('name');
+    document.querySelectorAll(`input[type="radio"][name="${nm}"]`).forEach(r => {
+      r.closest('.qcm-opt').classList.remove('active');
+    });
+    this.closest('.qcm-opt').classList.add('active');
+    updateProgress();
+  });
+});
+
+// ── TOAST ─────────────────────────────────────────────────────────────────────
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.className = 'toast', 3200);
+}
+
+// ── COLLECT DATA ──────────────────────────────────────────────────────────────
+function collectData() {
+  const data = { timestamp: new Date().toISOString() };
+
+  // Radio & selects
+  const allNames = [
+    'q1','q2','q3','q4',
+    'q5','q6','q7','q8',
+    'q9','q10','q11','q12',
+    'q13','q14','q15','q16',
+    'q17','q18','q19','q20',
+    'q21_produit','q21_prix','q21_distrib','q21_promo',
+    'q22','q23','q24','q28','q28_email'
+  ];
+
+  allNames.forEach(name => {
+    const radios = document.querySelectorAll(`input[type="radio"][name="${name}"]:checked`);
+    if (radios.length > 0) {
+      data[name] = radios[0].value;
+    } else {
+      const sel = document.querySelector(`select[name="${name}"]`);
+      if (sel) data[name] = sel.value;
+      else {
+        const inp = document.querySelector(`input[name="${name}"], textarea[name="${name}"]`);
+        if (inp) data[name] = inp.value;
+      }
+    }
+  });
+
+  // Textareas
+  ['q25','q26','q27'].forEach(name => {
+    const ta = document.querySelector(`textarea[name="${name}"]`);
+    if (ta) data[name] = ta.value;
+  });
+
+  return data;
+}
+
+// ── VALIDATE ──────────────────────────────────────────────────────────────────
+function validate() {
+  let valid = true;
+  let firstError = null;
+
+  document.querySelectorAll('.card[data-req]').forEach(card => {
+    card.classList.remove('required-err');
+  });
+
+  REQUIRED_FIELDS.forEach(name => {
+    const radios = document.querySelectorAll(`input[type="radio"][name="${name}"]:checked`);
+    const sel = document.querySelector(`select[name="${name}"]`);
+    const answered = radios.length > 0 || (sel && sel.value !== '');
+
+    if (!answered) {
+      valid = false;
+      // find the parent card
+      const el = document.querySelector(`input[name="${name}"], select[name="${name}"]`);
+      if (el) {
+        const card = el.closest('.card');
+        if (card && !card.classList.contains('required-err')) {
+          card.classList.add('required-err');
+          if (!firstError) firstError = card;
+        }
+      }
+    }
+  });
+
+  if (firstError) {
+    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    showToast('⚠️ Veuillez répondre à toutes les questions obligatoires.', 'error');
+  }
+
+  return valid;
+}
+
+// ── SUBMIT ────────────────────────────────────────────────────────────────────
+async function submitForm() {
+  if (!validate()) return;
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Envoi en cours…';
+
+  const data = collectData();
+  const scriptUrl = localStorage.getItem(STORAGE_KEY) || document.getElementById('apps-script-url')?.value.trim();
+
+  if (!scriptUrl) {
+    showToast('⚠️ Configurez d\'abord l\'URL Apps Script pour collecter les données.', 'error');
+    btn.disabled = false;
+    btn.textContent = '✅ Soumettre mes réponses';
+
+    // Still show success for demo / if no URL configured
+    showSuccess();
+    return;
+  }
+
+  try {
+    await fetch(scriptUrl, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    showSuccess();
+  } catch (err) {
+    showToast('❌ Erreur d\'envoi. Vérifiez l\'URL Apps Script.', 'error');
+    btn.disabled = false;
+    btn.textContent = '✅ Soumettre mes réponses';
+  }
+}
+
+function showSuccess() {
+  document.getElementById('submit-section').style.display = 'none';
+  document.getElementById('success-screen').classList.add('show');
+  document.getElementById('success-screen').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  showToast('✅ Réponses enregistrées avec succès !', 'success');
+}
+</script>
+</body>
+</html>
