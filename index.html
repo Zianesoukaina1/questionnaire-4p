@@ -154,7 +154,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-he
 <!-- ══════════════ FORM ══════════════ -->
 <div class="form-wrap">
 
-  <input type="hidden" id="apps-script-url"/>
+  
 
   <!-- INTRO -->
   <div class="intro-card">
@@ -482,6 +482,9 @@ function doPost(e) {
 -->
 
 <script>
+// ── FORMSPREE ─────────────────────────────────────────────────────────────────
+const FORMSPREE_URL = 'https://formspree.io/f/mzdlakgq';
+
 // ── PROGRESS ─────────────────────────────────────────────────────────────────
 const REQUIRED_FIELDS = [
   'q1','q2','q3','q4',
@@ -603,8 +606,7 @@ function validate() {
   return valid;
 }
 
-const FORMSPREE_URL = 'https://formspree.io/f/xdavrnjp';
-
+// ── SUBMIT ────────────────────────────────────────────────────────────────────
 async function submitForm() {
   if (!validate()) return;
 
@@ -613,7 +615,6 @@ async function submitForm() {
   btn.textContent = '⏳ Envoi en cours…';
 
   const data = collectData();
-
   try {
     const res = await fetch(FORMSPREE_URL, {
       method: 'POST',
@@ -623,10 +624,10 @@ async function submitForm() {
     if (res.ok) {
       showSuccess();
     } else {
-      throw new Error('Erreur serveur');
+      throw new Error('Formspree error');
     }
   } catch (err) {
-    showToast('❌ Erreur d\'envoi. Réessayez dans quelques instants.', 'error');
+    showToast('❌ Erreur d\'envoi. Veuillez réessayer.', 'error');
     btn.disabled = false;
     btn.textContent = '✅ Soumettre mes réponses';
   }
